@@ -4,86 +4,6 @@ const CHECK_INTERVAL = 60000; // Перевірка кожну хвилину
 const RELOAD = false; // Встановити як true, щоб виконувалась функція refuel [true/false]
 const percentOnDoom = 0.2; // % вибору кнопки DOOM, [0.1 = 10%, 0.2 = 20%]
 
-function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function getFuelIndicator() {
-    const fuelIndicatorText = document.querySelector(".FuelIndicator_description__EaUsa")?.textContent;
-
-    if (!fuelIndicatorText) {
-        console.log("🔄 Waiting for fuel indicator to become available...");
-        setTimeout(clickButtonWithRandomInterval, 1000);
-        return null;
-    }
-
-    return parseInt(fuelIndicatorText.split(" ")[0]);
-}
-
-async function clickButton(button, label) {
-    if (button) {
-        button.click();
-        console.log(`clicked ${label}`);
-        await delay(Math.random() * 500 + 1000);
-    } else {
-        console.error(`Button for ${label} not found!`);
-    }
-}
-
-async function checkAndClickAutoPilotButton() {
-    const periodicButton = document.querySelector(".PrimaryButton_button__SJFHA.AutoPilot_button__Sg42v");
-
-    if (periodicButton) {
-        await clickButton(periodicButton, "AutoPilot 🧑‍✈️");
-        return true;
-    }
-
-    return false;
-}
-
-async function startRefuelTimer() {
-    const randomInterval = Math.random() * 120000;
-    const totalTime = BASE_TIME + randomInterval;
-    console.log("⏳ Refuel timer set for:", (totalTime / 60000).toFixed(2), "minutes");
-
-    let remainingTime = totalTime;
-
-    const interval = setInterval(async () => {
-        remainingTime -= CHECK_INTERVAL;
-
-        const currentFuelIndicator = getFuelIndicator();
-        if (currentFuelIndicator === MAX_FUEL) {
-            clearInterval(interval);
-            console.log(`⛽️ Fuel indicator reached ${MAX_FUEL}, canceling refuel timer.`);
-            clickButtonWithRandomInterval();
-            return;
-        }
-
-        if (remainingTime > 0) {
-            console.log("⏰ Time remaining:", (remainingTime / 60000).toFixed(2), "minutes");
-        } else {
-            clearInterval(interval);
-            console.log("⏰ Timer finished, resuming clicks.");
-            clickButtonWithRandomInterval();
-        }
-    }, CHECK_INTERVAL);
-}
-
-async function refuel() {
-    const taskBtn = document.querySelectorAll("a.Navbar_link__qX0Sf")[2];
-    const raceBtn = document.querySelectorAll("a.Navbar_link__qX0Sf")[0];
-
-    await clickButton(taskBtn, "Task ✅");
-
-    const boostStageText = document.querySelector(".index_boost-data-stage__8CAgC")?.textContent;
-    if (boostStageText != "0/3") {
-        await clickButton(document.querySelectorAll(".index_boost-item__k6pnm")[1], "Reload Fuel Tank ⛽");
-        await clickButton(document.querySelector(".PrimaryButton_button__SJFHA.index_btn__bxKiJ"), "Apply Upgrade 🛠️");
-    }
-
-    await clickButton(raceBtn, "Race 🏁");
-}
-
 async function clickButtonWithRandomInterval() {
     if (await checkAndClickAutoPilotButton()) {
         setTimeout(clickButtonWithRandomInterval, 1000);
@@ -124,6 +44,86 @@ async function clickButtonWithRandomInterval() {
     console.log("⌚️ Interval:", randomInterval);
 
     setTimeout(clickButtonWithRandomInterval, randomInterval);
+}
+
+async function checkAndClickAutoPilotButton() {
+    const periodicButton = document.querySelector(".PrimaryButton_button__SJFHA.AutoPilot_button__Sg42v");
+
+    if (periodicButton) {
+        await clickButton(periodicButton, "AutoPilot 🧑‍✈️");
+        return true;
+    }
+
+    return false;
+}
+
+function getFuelIndicator() {
+    const fuelIndicatorText = document.querySelector(".FuelIndicator_description__EaUsa")?.textContent;
+
+    if (!fuelIndicatorText) {
+        console.log("🔄 Waiting for fuel indicator to become available...");
+        setTimeout(clickButtonWithRandomInterval, 1000);
+        return null;
+    }
+
+    return parseInt(fuelIndicatorText.split(" ")[0]);
+}
+
+async function clickButton(button, label) {
+    if (button) {
+        button.click();
+        console.log(`clicked ${label}`);
+        await delay(Math.random() * 500 + 1000);
+    } else {
+        console.error(`Button for ${label} not found!`);
+    }
+}
+
+function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function refuel() {
+    const taskBtn = document.querySelectorAll("a.Navbar_link__qX0Sf")[2];
+    const raceBtn = document.querySelectorAll("a.Navbar_link__qX0Sf")[0];
+
+    await clickButton(taskBtn, "Task ✅");
+
+    const boostStageText = document.querySelector(".index_boost-data-stage__8CAgC")?.textContent;
+    if (boostStageText != "0/3") {
+        await clickButton(document.querySelectorAll(".index_boost-item__k6pnm")[1], "Reload Fuel Tank ⛽");
+        await clickButton(document.querySelector(".PrimaryButton_button__SJFHA.index_btn__bxKiJ"), "Apply Upgrade 🛠️");
+    }
+
+    await clickButton(raceBtn, "Race 🏁");
+}
+
+async function startRefuelTimer() {
+    const randomInterval = Math.random() * 120000;
+    const totalTime = BASE_TIME + randomInterval;
+    console.log("⏳ Refuel timer set for:", (totalTime / 60000).toFixed(2), "minutes");
+
+    let remainingTime = totalTime;
+
+    const interval = setInterval(async () => {
+        remainingTime -= CHECK_INTERVAL;
+
+        const currentFuelIndicator = getFuelIndicator();
+        if (currentFuelIndicator === MAX_FUEL) {
+            clearInterval(interval);
+            console.log(`⛽️ Fuel indicator reached ${MAX_FUEL}, canceling refuel timer.`);
+            clickButtonWithRandomInterval();
+            return;
+        }
+
+        if (remainingTime > 0) {
+            console.log("⏰ Time remaining:", (remainingTime / 60000).toFixed(2), "minutes");
+        } else {
+            clearInterval(interval);
+            console.log("⏰ Timer finished, resuming clicks.");
+            clickButtonWithRandomInterval();
+        }
+    }, CHECK_INTERVAL);
 }
 
 clickButtonWithRandomInterval();
