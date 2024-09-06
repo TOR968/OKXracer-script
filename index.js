@@ -1,9 +1,10 @@
 const RELOAD = false; // Встановити як true, щоб виконувалась функція refuel [true/false] / Boolean to enable/disable the refuel function (default: false)
-
 const BASE_TIME = 150000; // 2.5 хвилини у мілісекундах час на відновлення палива / Base time for fuel regeneration in milliseconds (default: 150000, i.e., 2.5 minutes)
 const CHECK_INTERVAL = 60000; // Перевірка кожну хвилину / Interval for checking fuel status in milliseconds (default: 60000, i.e., 1 minute)
 const percentOnDoom = 0.2; // % вибору кнопки DOOM, [0.1 = 10%, 0.2 = 20%] / Probability of choosing the DOOM button (default: 0.2, i.e., 20%)
+
 const MAX_FUEL = Number(document.querySelector(".FuelIndicator_maxChances__OMSHl").textContent);
+
 async function clickButtonWithRandomInterval() {
     if (await checkAndClickAutoPilotButton()) {
         setTimeout(clickButtonWithRandomInterval, 1000);
@@ -60,13 +61,19 @@ async function checkAndClickAutoPilotButton() {
 function getFuelIndicator() {
     const fuelIndicatorText = document.querySelector(".FuelIndicator_description__EaUsa")?.textContent;
 
-    if (!fuelIndicatorText) {
+    if (!fuelIndicatorText || fuelIndicatorText.trim() === "") {
         console.log("🔄 Waiting for fuel indicator to become available...");
-        setTimeout(clickButtonWithRandomInterval, 1000);
         return null;
     }
 
-    return parseInt(fuelIndicatorText.split(" ")[0]);
+    const fuelValue = parseInt(fuelIndicatorText.split("/")[0]);
+
+    if (isNaN(fuelValue)) {
+        console.log("⚠️ Unable to parse fuel value:", fuelIndicatorText);
+        return null;
+    }
+
+    return fuelValue;
 }
 
 async function clickButton(button, label) {
