@@ -14,10 +14,9 @@ This script automates clicking in a game environment, managing fuel levels and a
 
 The script uses several constants that can be adjusted:
 
-- `MAX_FUEL`: Maximum fuel capacity (default: 28)
+- `RELOAD`: Boolean to enable/disable the refuel function (default: false)
 - `BASE_TIME`: Base time for fuel regeneration in milliseconds (default: 150000, i.e., 2.5 minutes)
 - `CHECK_INTERVAL`: Interval for checking fuel status in milliseconds (default: 60000, i.e., 1 minute)
-- `RELOAD`: Boolean to enable/disable the refuel function (default: false)
 - `percentOnDoom`: Probability of choosing the DOOM button (default: 0.2, i.e., 20%)
 
 ## Functions
