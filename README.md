@@ -34,7 +34,7 @@ To use this script:
 
 1. Open the game in your Telegram Desktop
 2. Open the developer console
-3. Copy and paste the script into the console (if insert does not work, write the command `allow pasting`)
+3. Copy and paste the [script](index.js) into the console (if insert does not work, write the command `allow pasting`)
 4. Press Enter to start the script
 
 The script will run automatically, managing fuel levels and clicking buttons according to the defined strategy.
